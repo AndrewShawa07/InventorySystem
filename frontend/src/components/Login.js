@@ -75,11 +75,7 @@ const Login = () => {
     
 
     return (
-        </* This part of the code is responsible for creating the initial layout of the login page.
-        Let's break it down: */
         div className="min-h-screen flex flex-col items-center bg-gray-100">
-
-            {/* Green Background Section with Logo */}
             {/* Background Image Section */}
             <div 
                 className="flex flex-col justify-center items-center w-full flex-grow bg-cover bg-center py-10 px-6">
