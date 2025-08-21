@@ -63,7 +63,7 @@ const AddProductPage = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const userId = localStorage.getItem('userId'); // Assuming you store user ID in localStorage
+      const userId = localStorage.getItem('userId'); 
 
       const productData = {
         ...formData,
@@ -81,10 +81,10 @@ const AddProductPage = () => {
 
       toast.success('Product added successfully!');
       
-      // Redirect after a short delay to allow the toast to be seen
+      // Redirecting after a short delay to allow the toast to be seen
       setTimeout(() => {
         navigate('/view-products'); // Redirect to products list after successful addition
-      }, 0); //change this later to 2000 for 2 seconds delay if needed
+      }, 0); //can change this later to 2000 for 2 seconds delay if needed
     } catch (err) {
       console.error('Error adding product:', err);
       const errorMessage = err.response?.data?.message || 'Failed to add product';
@@ -208,7 +208,7 @@ const AddProductPage = () => {
         </div>
       </div>
       
-      {/* Toast Container - Add this at the end of your JSX */}
+      {/* Toast Container */}
       <ToastContainer 
         position="top-right"
         autoClose={3000}
