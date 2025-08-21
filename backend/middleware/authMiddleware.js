@@ -6,7 +6,6 @@ export const authenticateToken = (req, res, next) => {
   // console.log('Authorization Header:', authHeader); // Log the Authorization header
 
   const token = authHeader && authHeader.split(' ')[1]; // Extract token from "Bearer <token>"
-  // console.log('Extracted Token:', token); // Log the extracted token
 
   if (!token) {
     console.log('No token provided'); // Log if no token is provided
@@ -27,6 +26,6 @@ export const authenticateToken = (req, res, next) => {
     }
     // console.log('Authenticated User:', user); // Log the
     req.user = user; // Attach the decoded user payload to the request object
-    next(); // Proceed to the next middleware or route handler
+    next(); 
   });
 };
