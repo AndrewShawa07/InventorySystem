@@ -88,7 +88,7 @@ const AddInboundTransaction = () => {
     fetchData();
   }, []);
   
-  // Add this useEffect to fetch categories
+  // useEffect to fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -108,7 +108,6 @@ const AddInboundTransaction = () => {
   // Filter products based on search
   useEffect(() => {
     if (!Array.isArray(products)) {
-      // If products is not an array yet, skip filtering
       setFilteredProducts([]);
       return;
     }
@@ -184,7 +183,7 @@ const AddInboundTransaction = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      // Add the new supplier to the list and select it
+      // Adding the new supplier to the list and select it
       const addedSupplier = response.data;
       setSuppliers(prev => [...prev, addedSupplier]);
       setFormData(prev => ({
@@ -208,25 +207,25 @@ const AddInboundTransaction = () => {
     
     try {
       const token = localStorage.getItem('token');
-      const user = JSON.parse(localStorage.getItem('user')); // Get the user object
+      const user = JSON.parse(localStorage.getItem('user')); // Getting the user object
       
       if (!user || !user.id) {
         throw new Error('User information not found');
       }
   
-      // First add supplier if needed
+      // First adding supplier if needed
       if (showAddSupplier) {
         await addNewSupplier();
       }
       
-      // Prepare transaction data
+      // Preparing transaction data
       const transactionData = {
         product_id: formData.product_id,
         quantity: formData.quantity,
         remarks: formData.remarks,
         supplier_id: formData.supplier_id,
         transaction_type: 'inbound',
-        performed_by: user.id // Use the user's ID from localStorage
+        performed_by: user.id 
       };
       console.log('Transaction Data:', transactionData);
       // Create the inbound transaction
@@ -327,7 +326,7 @@ const AddInboundTransaction = () => {
               </div>
             </div>
 
-            {/* Add New Product Form (Conditional) */}
+            {/* New Product Form (Conditional) */}
             {showAddProduct && (
               <div className="mb-6 p-4 border border-gray-300 rounded-md bg-gray-50">
                 <h3 className="text-lg font-medium mb-3">Add New Product</h3>
@@ -405,7 +404,7 @@ const AddInboundTransaction = () => {
                             headers: { Authorization: `Bearer ${token}` }
                           });
                           
-                          // Add the new product to the list and select it
+                          // Adding the new product to the list and select it
                           const addedProduct = response.data;
                           setProducts(prev => [...prev, addedProduct]);
                           setFormData(prev => ({
@@ -514,7 +513,7 @@ const AddInboundTransaction = () => {
               </div>
             </div>
 
-            {/* Add New Supplier Form (Conditional) */}
+            {/* Adding New Supplier Form (Conditional) */}
             {showAddSupplier && (
               <div className="mb-6 p-4 border border-gray-300 rounded-md bg-gray-50">
                 <h3 className="text-lg font-medium mb-3">Add New Supplier</h3>
@@ -602,7 +601,7 @@ const AddInboundTransaction = () => {
                             headers: { Authorization: `Bearer ${token}` }
                           });
                           
-                          // Add the new supplier to the list and select it
+                          // Adding the new supplier to the list and select it
                           const addedSupplier = response.data;
                           setSuppliers(prev => [...prev, addedSupplier]);
                           setFormData(prev => ({
