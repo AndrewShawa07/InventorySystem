@@ -43,41 +43,6 @@ const AdjustmentsPage = () => {
     }
   }, [isAuthenticated, navigate]);
 
-//   const fetchData = useCallback(async () => {
-//     try {
-//       const token = localStorage.getItem("token");
-      
-//       // Fetch all adjustment transactions
-//       const response = await axios.get("http://localhost:8080/stock-transactions?transaction_type=adjustment", {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-      
-//       const adjustments = response.data;
-//       setAdjustmentTransactions(adjustments);
-      
-//       // Calculate stats
-//       const positiveAdjustments = adjustments.filter(a => a.quantity > 0);
-//       const negativeAdjustments = adjustments.filter(a => a.quantity < 0);
-      
-//       const totalPositive = positiveAdjustments.reduce((sum, a) => sum + a.quantity, 0);
-//       const totalNegative = negativeAdjustments.reduce((sum, a) => sum + a.quantity, 0);
-      
-//       setStats({
-//         totalAdjustments: adjustments.length,
-//         totalPositive,
-//         totalNegative,
-//         netChange: totalPositive + totalNegative,
-//         recentAdjustments: adjustments.slice(0, 4)
-//       });
-      
-//     } catch (error) {
-//       console.error("Error fetching data:", error);
-//       if (error.response?.status === 401) {
-//         navigate("/login");
-//       }
-//     }
-//   }, [navigate]);
-// REPLACE the existing fetchData function with this:
 const fetchData = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
