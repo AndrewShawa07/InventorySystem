@@ -176,7 +176,7 @@ console.log("Processed Stats:", processedStats);
       const quantity = transaction.quantity || 0;
       const unitPrice = transaction.unit_price || 0;
       const value = transaction.unit_price ? (transaction.quantity * transaction.unit_price).toFixed(2) : '0.00';
-      // Use a utility function to get the performed by name
+    
       const transactionDate = transaction.date 
         ? new Date(transaction.date).toLocaleDateString("en-GB") 
         : '';
