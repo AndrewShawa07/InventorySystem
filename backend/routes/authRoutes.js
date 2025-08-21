@@ -66,7 +66,7 @@ router.post('/login', async (req, res) => {
   });
 });
 
-// 🚀 Moved logout route outside the login route
+//Moved logout route outside the login route
 router.post('/logout', async (req, res) => {
   const { userId } = req.body;
 
