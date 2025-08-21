@@ -13,7 +13,7 @@ const AddAdjustmentTransaction = () => {
     product_id: '',
     quantity: '',
     remarks: '',
-    // Note: Excluding supplier_id, collected_by, and department_id as per requirements
+
   });
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -111,23 +111,22 @@ const AddAdjustmentTransaction = () => {
         throw new Error('User information not found');
       }
       
-      // Prepare transaction data for adjustment
+      // Preparing transaction data for adjustment
       const transactionData = {
         product_id: formData.product_id,
         quantity: formData.quantity, // Can be positive or negative
         remarks: formData.remarks,
         transaction_type: 'adjustment',
         performed_by: user.id
-        // Note: Not including supplier_id, collected_by, or department_id
       };
       
-      // Create the adjustment transaction
+      // Creating the adjustment transaction
       await axios.post('http://localhost:8080/stock-transactions', transactionData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
       toast.success('Adjustment transaction added successfully!');
-      navigate('/adjustments'); // Assuming you have a route for adjustment transactions
+      navigate('/adjustments');
     } catch (error) {
       console.error('Error adding adjustment transaction:', error);
       toast.error('Failed to add adjustment transaction. Please try again.');
