@@ -164,7 +164,7 @@ export async function getCards(status) {
 //............................................................................stock transactions
 // Get all stock transactions with optional filtering by transaction type// Update getStockTransactions, for inboun, outbound and adjustments
 export async function getStockTransactions(filters) {
-  console.log("📦 getStockTransactions called with filters:", filters);
+  console.log("GetStockTransactions called with filters:", filters);
 
   let query = `
     SELECT 
@@ -395,77 +395,6 @@ export async function getLast7DaysStockData() {
   return rows;
 }
 
-// Get all stock transactions with product info
-// export async function getStockTransactions(transaction_type) {
-//   let query = `
-//     SELECT 
-//       st.*,
-//       p.name as product_name,
-//       p.unit_price
-//     FROM stock_transactions st
-//     LEFT JOIN products p ON st.product_id = p.id
-//   `;
-//   const params = [];
-
-//   if (transaction_type) {
-//     query += " WHERE st.transaction_type = ?";
-//     params.push(transaction_type);
-//   }
-
-//   query += " ORDER BY st.date DESC";
-
-//   const [rows] = await pool.query(query, params);
-//   return rows;
-// }
-
-// Delete a stock transaction (with stock adjustment)
-// export async function deleteStockTransaction(id) {
-//   const connection = await pool.getConnection();
-//   try {
-//     await connection.beginTransaction();
-
-//     // 1. Get the transaction first
-//     const [transaction] = await connection.query(
-//       'SELECT * FROM stock_transactions WHERE id = ?', 
-//       [id]
-//     );
-
-//     if (!transaction[0]) {
-//       throw new Error('Transaction not found');
-//     }
-
-//     const { product_id, quantity, transaction_type } = transaction[0];
-
-//     // 2. Reverse the stock impact
-//     if (transaction_type === 'inbound') {
-//       await connection.query(`
-//         UPDATE products 
-//         SET current_quantity = current_quantity - ? 
-//         WHERE id = ?
-//       `, [quantity, product_id]);
-//     } else if (transaction_type === 'outbound') {
-//       await connection.query(`
-//         UPDATE products 
-//         SET current_quantity = current_quantity + ? 
-//         WHERE id = ?
-//       `, [quantity, product_id]);
-//     }
-
-//     // 3. Delete the transaction
-//     await connection.query('DELETE FROM stock_transactions WHERE id = ?', [id]);
-
-//     await connection.commit();
-//     return true;
-//   } catch (error) {
-//     await connection.rollback();
-//     throw error;
-//   } finally {
-//     connection.release();
-//   }
-// }
-//............................inbound stock
-// Add these functions to your database.js
-
 // Get inbound stock over time
 export async function getInboundOverTime() {
   const [rows] = await pool.query(`
@@ -500,7 +429,7 @@ export async function getInboundByProduct() {
 
 // Get inbound statistics
 export async function getInboundStats() {
-  // console.log("📌 getInboundStats() was called");
+  // console.log("getInboundStats() was called");
 
   // First query: Basic stats
   const [statsResults] = await pool.query(`
@@ -733,7 +662,7 @@ export async function getCategories() {
 //..................add product
 //............................products
 //............................add inbound stock transaction
-// Add these functions to your database.js
+
 
 // Create a new inbound stock transaction
 export async function createInboundTransaction(transactionData) {
@@ -741,7 +670,7 @@ export async function createInboundTransaction(transactionData) {
   try {
     await connection.beginTransaction();
     
-    // 1. Create the transaction record
+    //Create the transaction record
     const [result] = await connection.query(`
       INSERT INTO stock_transactions 
       (product_id, transaction_type, quantity, remarks, supplier_id, performed_by, date)
@@ -755,7 +684,7 @@ export async function createInboundTransaction(transactionData) {
       transactionData.performed_by
     ]);
     
-    // 2. Update the product's current quantity
+    //Update the product's current quantity
     await connection.query(`
       UPDATE products 
       SET current_quantity = current_quantity + ? 
@@ -816,7 +745,7 @@ export async function createStockTransaction(transactionData) {
   try {
     await connection.beginTransaction();
     
-    // 1. Create the transaction record
+    //Create the transaction record
     const [result] = await connection.query(`
       INSERT INTO stock_transactions 
       (product_id, transaction_type, quantity, remarks, performed_by, supplier_id, collected_by, department_id, date)
@@ -832,7 +761,7 @@ export async function createStockTransaction(transactionData) {
       department_id
     ]);
     
-    // 2. Update product stock based on transaction type
+    //Update product stock based on transaction type
     if (transaction_type === 'inbound') {
       await connection.query(`
         UPDATE products 
@@ -875,7 +804,6 @@ export async function createStockTransaction(transactionData) {
   }
 }
 //..............................add outbound stock transactions
-// Add this function to get departments
 export async function getDepartments() {
   const [rows] = await pool.query('SELECT * FROM departments ORDER BY name');
   return rows;
@@ -982,7 +910,7 @@ export async function updateCard(id, firstname, lastname, status, /*email,*/ nrc
   return getCard(id); // Return the updated card
 }
 export async function patchStockTransaction(id, updates) {
-  // 1. Fetch existing transaction
+  // Fetch existing transaction
   const [existingRows] = await pool.query(
     "SELECT * FROM stock_transactions WHERE id = ?",
     [id]
@@ -992,7 +920,7 @@ export async function patchStockTransaction(id, updates) {
   }
   const existing = existingRows[0];
 
-  // 2. Validate updates
+  //Validate updates
   const fields = [];
   const values = [];
   
@@ -1038,7 +966,7 @@ export async function patchStockTransaction(id, updates) {
     throw new Error("No valid fields to update");
   }
 
-  // 3. Calculate inventory adjustments
+  // Calculate inventory adjustments
   const productId = updates.product_id || existing.product_id;
   
   // Get current product quantity
@@ -1077,7 +1005,7 @@ export async function patchStockTransaction(id, updates) {
       netQuantityChange += newQty; // Apply new adjustment
     }
   }
-  // Case 2: Only quantity changed (same type)
+  //Only quantity changed (same type)
   else if (updates.quantity !== undefined && updates.quantity !== existing.quantity) {
     const diff = updates.quantity - existing.quantity;
     
@@ -1090,12 +1018,12 @@ export async function patchStockTransaction(id, updates) {
     }
   }
 
-  // 4. Validate inventory (skip negative check for pure adjustment changes)
+  // Validate inventory (skip negative check for pure adjustment changes)
   if (!isAdjustmentChange && product.current_quantity + netQuantityChange < 0) {
     throw new Error("Insufficient stock - resulting quantity would be negative");
   }
 
-  // 5. Execute as a transaction
+  //Execute as a transaction
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
@@ -1124,11 +1052,11 @@ export async function patchStockTransaction(id, updates) {
     connection.release();
   }
 
-  // 6. Return updated transaction
+  //Return updated transaction
   return getStockTransaction(id);
 }
 export async function patchProduct(id, updates) {
-  // 1. Fetch existing product
+  // Fetch existing product
   const [existingRows] = await pool.query(
     "SELECT * FROM products WHERE id = ?",
     [id]
@@ -1140,7 +1068,7 @@ export async function patchProduct(id, updates) {
   
   const existing = existingRows[0];
 
-  // 2. Validate updates and build update fields
+  // Validate updates and build update fields
   const fields = [];
   const values = [];
   
@@ -1204,7 +1132,7 @@ export async function patchProduct(id, updates) {
     throw new Error("No valid fields to update");
   }
 
-  // 3. Execute the update
+  //Execute the update
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
@@ -1223,7 +1151,7 @@ export async function patchProduct(id, updates) {
     connection.release();
   }
 
-  // 4. Return updated product
+  // Return updated product
   return getProductById(id);
 }
 // Partially update a card (PATCH - updates only provided fields)
@@ -1263,7 +1191,7 @@ if (updates.field_of_study) {
       throw new Error("No valid fields to update");
   }
 
-  values.push(id); // Add ID at the end
+  values.push(id);
   await pool.query(`UPDATE cards SET ${fields.join(", ")} WHERE id = ?`, values);
   return getCard(id); // Return the updated card
 }
@@ -1277,7 +1205,6 @@ export async function deleteCard(id) {
   return card; // Return the deleted card
 }
 //.................................................................renewals
-// Add these functions to database.js
 
 // Create a renewal record
 export async function createRenewal(cardId, receiptId, userId) {
@@ -1285,13 +1212,13 @@ export async function createRenewal(cardId, receiptId, userId) {
   try {
     await connection.beginTransaction();
 
-    // 1. Create the renewal record
+    // Create the renewal record
     const [result] = await connection.query(`
       INSERT INTO renewals (card_id, receipt_id, renewed_by)
       VALUES (?, ?, ?)
     `, [cardId, receiptId, userId]);
     
-    // 2. Update the card's receipt_id and expiration date
+    // Update the card's receipt_id and expiration date
     await connection.query(`
       UPDATE cards 
       SET receipt_id = ?, 
