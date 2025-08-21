@@ -8,7 +8,6 @@ import { SidebarContext } from '../context/SidebarContext';
 
 const Header = () => {
   // const { isSidebarOpen, setIsSidebarOpen } = useContext(SidebarContext);
-  // In your Header component
 const { isSidebarOpen, setIsSidebarOpen, isCollapsed, toggleSidebar } = useContext(SidebarContext);
 
   const [userName, setUserName] = useState("");
