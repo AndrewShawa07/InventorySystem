@@ -36,7 +36,7 @@ useEffect(() => {
         axios.get(`http://localhost:8080/users`, {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        // Add product_id filter to only get transactions for this product
+        
         axios.get(`http://localhost:8080/stock-transactions?product_id=${id}&limit=5`, {
           headers: { Authorization: `Bearer ${token}` }
         })
@@ -57,8 +57,6 @@ console.log("Select transactions gotten:", transactionsRes.data);
   fetchData();
 }, [id]);
 
-
-  // Helper functions to get names
   const getCategoryName = () => {
     const category = categories.find(c => c.id === product.category_id);
     return category ? category.name : `Category ID: ${product.category_id}`;
