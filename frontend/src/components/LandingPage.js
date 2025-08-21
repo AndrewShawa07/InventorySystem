@@ -42,7 +42,6 @@ const LandingPage = () => {
                 className="flex flex-col justify-center items-center w-full flex-grow bg-cover bg-center py-12 md:py-24" 
                 style={{ backgroundImage: "url('/logo1.jpeg')" }}
             >
-                {/* Optional: Add content here */}
             </div>
         </div>
     );
