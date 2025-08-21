@@ -414,7 +414,7 @@ const InboundStockPage = () => {
             dataKey="value"
             nameKey="name"
             labelLine={false}
-            // 👇 No text inside pie slices
+           
             label={false}
           >
             {topSuppliersData.map((entry, index) => (
