@@ -427,7 +427,7 @@ console.log("Processed Stats:", processedStats);
                 dataKey="value"
                 nameKey="name"
                 labelLine={false}
-                label={false} // 👈 Hide labels inside pie
+                label={false}
                 animationBegin={100}
                 animationDuration={1000}
                 animationEasing="ease-out"
