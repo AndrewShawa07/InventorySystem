@@ -72,7 +72,7 @@ app.post('/upload-receipt', authenticateToken, upload.single('receipt'), async (
 
   const { filename, path: filepath } = req.file;
   const uploadedBy = req.user.userId;
-  console.log("Received request body:", uploadedBy); // 🔍 Check request body
+  console.log("Received request body:", uploadedBy); //Check request body
   try {
     const receiptId = await insertReceipt(filename, filepath, uploadedBy);
     res.status(201).json({ id: receiptId, filename, filepath, uploadedBy });
@@ -130,113 +130,6 @@ app.get('/receipts/:id', authenticateToken, async (req, res) => {
 
 app.use('/auth', authRoutes); // Mount the authentication routes
 
-// Add route to get the counts of cards
-// Get card counts
-app.get("/cards/count", authenticateToken, async (req, res) => {
-  const { total, pending, collected } = await getCardCounts();
-  res.json({ total, pending, collected });
-});
-
-// Totalrecords infomatics code
-// Totalrecords infomatics code
-app.get("/cards/last7days", authenticateToken, async (req, res) => {
-  try {
-    const result = await getLast7DaysData();
-    
-    // Convert each date in the result to the local timezone
-    const convertedResult = result.map(row => {
-      const localDate = new Date(row.day); // Converts UTC to local time
-      row.day = localDate.toLocaleDateString(); // You can use toLocaleString() if you want time as well
-      return row;
-    });
-    
-    res.json(convertedResult);
-  } catch (error) {
-    console.error("Error fetching last 7 days data:", error);
-    res.status(500).send({ message: "Error fetching last 7 days data" });
-  }
-});
-// Pending over time infomatics code
-// Pending over time route
-app.get("/cards/pending-over-time", authenticateToken, async (req, res) => {
-  try {
-    const result = await getPendingOverTimeData();
-    
-    // Convert each date in the result to the local timezone
-    const convertedResult = result.map(row => {
-      const localDate = new Date(row.day); // Converts UTC to local time
-      row.day = localDate.toLocaleDateString(); // You can use toLocaleString() if you want time as well
-      return row;
-    });
-    
-    res.json(convertedResult);
-  } catch (error) {
-    console.error("Error fetching pending records over time:", error);
-    res.status(500).send({ message: "Error fetching pending records over time" });
-  }
-});
-// Pending by field infomatics code
-// Pending by field infomatics code
-app.get("/cards/pending-by-field", authenticateToken, async (req, res) => {
-  try {
-    const result = await getPendingByFieldData();
-    
-    // Convert each date in the result to the local timezone
-    const convertedResult = result.map(row => {
-      const localDate = new Date(row.day); // Converts UTC to local time
-      row.day = localDate.toLocaleDateString(); // You can use toLocaleString() if you want time as well
-      return row;
-    });
-    
-    res.json(convertedResult);
-  } catch (error) {
-    console.error("Error fetching pending records by field:", error);
-    res.status(500).send({ message: "Error fetching pending records by field" });
-  }
-});
-// Collected by month infomatics code
-app.get("/cards/collected-by-month", authenticateToken, async (req, res) => {
-  try {
-    const result = await getCollectedByMonthData(); // You need to implement this function in your database.js
-    res.json(result);
-  } catch (error) {
-    console.error("Error fetching collected records by month:", error);
-    res.status(500).send({ message: "Error fetching collected records by month" });
-  }
-});
-// Collected by day infomatics code
-// Collected by day infomatics code
-app.get("/cards/collected-by-day", authenticateToken, async (req, res) => {
-  try {
-    const result = await getCollectedByDayData(); // You need to implement this function in your database.js
-console.log("result", result);
-    // Convert each date in the result to the local timezone
-    const convertedResult = result.map(row => {
-      // const localDate = new Date(row.date); // Converts UTC to local time
-      // row.day = localDate.toLocaleDateString(); // You can use toLocaleString() if you want time as well
-      row.day = row.day
-      console.log("row.day", row.day)
-      return row;
-    });
-    
-    res.json(convertedResult);
-  } catch (error) {
-    console.error("Error fetching collected records by day:", error);
-    res.status(500).send({ message: "Error fetching collected records by day" });
-  }
-});
-
-// Get all cards
-app.get("/cards", authenticateToken, async (req, res) => {
-  const { status } = req.query; // e.g., 'pending', 'collected', or undefined
-  try {
-    const cards = await getCards(status); // Pass status to DB function
-    res.send(cards);
-  } catch (error) {
-    console.error("Failed to get cards:", error);
-    res.status(500).send("Error fetching cards");
-  }
-});
 //.........................................................................................................stock transactions
 // Get all stock transactions
 app.get("/stock-transactions", authenticateToken, async (req, res) => {
@@ -345,7 +238,6 @@ app.get("/stock-transactions/last7days", authenticateToken, async (req, res) => 
   }
 });
 //...............................inbound stock
-// Add these routes to your app.js
 
 // Get inbound stock over time
 app.get("/stock-transactions/inbound-over-time", authenticateToken, async (req, res) => {
@@ -392,7 +284,6 @@ app.get("/stock-transactions/inbound", authenticateToken, async (req, res) => {
 });
 //...............................inbound stock
 //...............................outbound stock
-// Add these routes to your app.js
 
 // Get outbound stock over time
 app.get("/stock-transactions/outbound-over-time", authenticateToken, async (req, res) => {
@@ -438,7 +329,6 @@ app.get("/stock-transactions/outbound", authenticateToken, async (req, res) => {
   }
 });
 //...............................outbound stock
-// Add these routes to your app.js
 
 // Get single stock transaction
 app.get("/stock-transactions/:id", authenticateToken, async (req, res) => {
@@ -455,7 +345,6 @@ app.get("/stock-transactions/:id", authenticateToken, async (req, res) => {
   }
 });
 //..............................products
-// Add these routes to your app.js
 
 // Get all products
 app.get("/products", authenticateToken, async (req, res) => {
@@ -507,7 +396,6 @@ app.delete("/products/:id", authenticateToken, async (req, res) => {
   }
 });
 //.................add product
-// Add these routes to your app.js
 
 // Get all categories
 app.get('/categories', authenticateToken, async (req, res) => {
@@ -524,7 +412,7 @@ app.get('/categories', authenticateToken, async (req, res) => {
 app.post('/products', authenticateToken, async (req, res) => {
   try {
     const { name, category_id, unit_price } = req.body;
-    const added_by = req.user.userId; // Assuming your auth middleware adds userId to req.user
+    const added_by = req.user.userId; 
 
     if (!name || !category_id || unit_price === undefined) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -540,7 +428,6 @@ app.post('/products', authenticateToken, async (req, res) => {
 //.................add product
 //..............................products
 //..............................add inbound stock transactions
-// Add these routes to your app.js
 
 // Get products for dropdown
 app.get("/products-dropdown", authenticateToken, async (req, res) => {
@@ -597,7 +484,7 @@ app.post("/stock-transactions", authenticateToken, async (req, res) => {
 });
 
 //..............................add outbound stock transactions
-// Add this route to get departments
+
 app.get('/departments', authenticateToken, async (req, res) => {
   try {
     const departments = await getDepartments();
@@ -618,7 +505,7 @@ app.get("/cards/:id", authenticateToken, async (req, res) => {
 
 // Create a new card
 app.post("/cards", authenticateToken, async (req, res) => {
-  console.log("Received request body:", req.body); // 🔍 Check request body
+  console.log("Received request body:", req.body); 
   const { firstname, lastname, /*email,*/ nrc, type, field_of_study, userId, receipt_id} = req.body
 
   //
@@ -653,7 +540,6 @@ app.patch("/notifications/:id/read", authenticateToken, async (req, res) => {
   }
 });
 
-// In your Express server, handle the duplicate check
 app.post("/check-duplicate", authenticateToken, async (req, res) => {
   const { email, nrc } = req.body;
   
@@ -713,7 +599,6 @@ app.patch("/products/:id", authenticateToken, isAdmin, async (req, res) => {
   }
 });
 //..............................................user amanagement
-// Example Express.js routes for user management
 // Get all users
 app.get("/users", authenticateToken, async (req, res) => {
   try {
