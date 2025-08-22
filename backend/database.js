@@ -54,7 +54,7 @@ export async function getUserByEmail(email) {
 
 
 
-// Add function to fetch the card counts
+// function to fetch the card counts
 export async function getCardCounts() {
   // Total number of cards
   const [totalRows] = await pool.query("SELECT COUNT(*) AS total FROM cards")
@@ -572,7 +572,6 @@ export async function getOutboundTransactions() {
 }
 //............................outbound stock
 //............................products
-// Add these functions to your database.js
 
 // Get all products with categories
 export async function getProducts() {
@@ -654,7 +653,7 @@ export async function createProduct(name, category_id, unit_price, added_by) {
   return result.insertId;
 }
 
-// Add this function to get categories
+// function to get categories
 export async function getCategories() {
   const [rows] = await pool.query('SELECT * FROM categories ORDER BY name');
   return rows;
@@ -865,24 +864,6 @@ export async function checkNrcExists(nrc) {
   return rows[0].count > 0; // Returns true if NRC exists, false otherwise
 }
 
-// create new id
-export async function createCard(firstname, lastname, nrc, type, field_of_study, userId, receipt_id) { //start here tomorrow, receipt_id is not getting passed apparently. it need to be here before this statement even happens
-  const [result] = await pool.query(`
-    INSERT INTO cards (firstname, lastname, nrc, type, field_of_study, receipt_id)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `, [firstname, lastname, nrc, type, field_of_study, receipt_id]);
-
-  const id = result.insertId;
-
-  // Insert a notification
-  const message = `New record added: ${firstname} ${lastname}`;
-  await pool.query(`
-    INSERT INTO notifications (message, user_id, is_read, created_at)
-    VALUES (?, ?, ?, NOW())
-  `, [message, userId, 0]);
-
-  return getCard(id);
-}
 export async function getNotifications(userId) {
   const [rows] = await pool.query(`
     SELECT * FROM notifications 
@@ -1236,27 +1217,6 @@ export async function createRenewal(cardId, receiptId, userId) {
   }
 }
 
-// Get all renewals for a card
-export async function getRenewalsByCardId(cardId) {
-  const [rows] = await pool.query(`
-    SELECT r.*, rc.filename, rc.filepath, u.firstname, u.lastname
-    FROM renewals r
-    JOIN receipts rc ON r.receipt_id = rc.id
-    JOIN users u ON r.renewed_by = u.id
-    WHERE r.card_id = ?
-    ORDER BY r.renewed_at DESC
-  `, [cardId]);
-  return rows;
-}
-
-// Check if card exists by NRC
-export async function getCardByNrc(nrc) {
-  const [rows] = await pool.query(`
-    SELECT * FROM cards WHERE nrc = ?
-  `, [nrc]);
-  return rows[0];
-}
-//.................................................................renewals
 //.........................user management
 // Get all users
 export async function getUsers() {
@@ -1295,7 +1255,7 @@ export async function updateUserLoginStatus(userId, isLoggedIn) {
     console.log(`User ${userId} login status updated to ${isLoggedIn}`);
   } catch (error) {
     console.error("Error updating user login status:", error);
-    throw error; // Re-throw the error to handle it in the route
+    throw error; 
   }
 }
 //.........................user management
